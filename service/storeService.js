@@ -40,6 +40,9 @@ async function findAvgPrices(themeParkId) {
 
 async function insertMerchandise(storeId, sku, name, price) {
     return await appService.withOracleDB(async (connection) => {
+        // by using bind variables, 'name' parameter cannot be used for sql injection
+        // @621_f2 on piazza
+        // https://stackoverflow.com/questions/43235073/how-is-sql-injection-possible-when-using-bind-variables
         const merchResult = await connection.execute(
             `INSERT INTO Merchandise VALUES(:sku, :name, :price)`,
             [sku, name, price],
